@@ -8,7 +8,7 @@ class CheckInCustomer {
  public:
     static bool CustomerSearch(std::unordered_map<int, Customer*> customers, int custId);
     static void CreateNewCustomer();
-    void CheckIn();
+    static void ChooseFlight(Customer* cust);
     void AssignPlane(int custId);
 
 };

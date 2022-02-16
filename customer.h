@@ -5,7 +5,7 @@
 
 class Customer {
  public:
-
+    Customer();
     Customer(int customer_id, std::string phone_number, std::string address, std::string first_name, std::string last_name, int flight_id);
     int GetId();
     int GetFlightId();

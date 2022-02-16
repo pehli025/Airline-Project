@@ -1,31 +1,42 @@
-#ifndef AIRLINE_PLANE_H
-#define AIRLINE_PLANE_H
+#ifndef PLANE_H
+#define PLANE_H
 
-#include "airline.h"
-#include "customer.h"
+
 #include <iostream>
-
 #include <vector>
+#include <unordered_map>
+#include "customer.h"
 
-class Plane {
+class Plane{
 public:
-    Plane(std::string plane_model, std::string pilot_name, std::string co_pilot, int num_seats, std::vector<Customer*> passengers);
+    Plane();
+    Plane(std::string dest, int flight_id,  std::string plane_model, std::string pilot_name, std::string co_pilot);
 
-    static void SeatAssignment(Customer* customer, int chosenSeat);
-    int RandomSeat();
-    void PrintAvailableSeats();
+    static void SeatAssignment(int flightId, Customer* customer, int chosenSeat);
+    static void PrintAvailableSeats(int flightID);
+    static void PrintFlightInfo(int flightId);
+    static void PlaneIncrement();
+    static void AddPlane(Plane* plane);
+    static int GetPlaneId();
+    static void ListAvailableFlights();
+    bool IsSeatAvailable(int chosenSeat);
 
-    static std::string GetPlaneModel();
-    static std::string GetPilotName();
-    static std::string GetCoPilotName();
-    static int GetNumSeats();
-    static std::vector<Customer*> GetSeats();
-    static bool IsSeatAvailable(int chosenSeat);
+    std::string GetPlaneModel();
+    std::string GetPilotName();
+    std::string GetCoPilotName();
+    std::string GetDest();
+    int GetFlightId();
+    int GetNumSeats();
+    int RemainingSeats();
+    std::vector<Customer*>& GetPassengers();
 
-    static int numSeats;
-    static std::string planeModel, pilotName, coPilot;
-    static std::vector<Customer*> passengers_   ;
-
+private:
+    inline static unsigned int planeId = 0;
+    int remainingSeats;
+    int numSeats, flightId;
+    std::string planeModel, pilotName, coPilot, dest_;
+    inline static std::unordered_map<int,Plane*> planes;
+    std::vector<Customer*> passengers_;
 };
 
 #endif //AIRLINE_PLANE_H

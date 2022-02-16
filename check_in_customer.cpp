@@ -44,13 +44,23 @@
         std::cout  << "Enter flight id: ";
         std::cin >> flightId;
 
-        Customer* cust = new Customer(Airline::GetCustId(), phoneNum, addr, firstName, lastName, flightId);
+        Customer* cust = new Customer(Airline::GetCustId(), phoneNum, addr,
+                                      firstName, lastName, -1);
 
         Airline::AddCustomer(cust);
+        CheckInCustomer::ChooseFlight(cust);
     }
 
-    void CheckInCustomer::CheckIn() {
-        //assign the flight
+    void CheckInCustomer::ChooseFlight(Customer* customer) {
+        int flightNum = 0, chosenSeat;
+        std::cout << "Here is a list of available flights to choose from." << std::endl;
+        Plane::ListAvailableFlights();
+        std::cout << "Choose from the flight IDs: ";
+        std::cin >> flightNum;
+        std::cout << "Choose from Available seats: " << std::endl;
+        Plane::PrintAvailableSeats(flightNum);
+        std::cin >> chosenSeat;
+        Plane::SeatAssignment(flightNum, customer, chosenSeat);
     }
 	
 	

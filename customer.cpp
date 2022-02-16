@@ -1,7 +1,14 @@
 #include "customer.h"
 #include <iostream>
 
-
+    Customer::Customer() {
+        CustomerId  = -1;
+        address_ = "address";
+        phoneNum = "";
+        firstName = "";
+        lastName = "";
+        flightId = -1;
+    }
     Customer::Customer(int customer_id, std::string phone_number, std::string address, std::string first_name, std::string last_name, int flight_id) {
         CustomerId  = customer_id;
         address_ = address;
