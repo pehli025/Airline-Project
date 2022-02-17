@@ -3,7 +3,8 @@
 #include <iostream>
 #include <stdio.h>
 #include "airline.h"
-#include "check_in_customer.h"
+
+
 
 
     void Airline::Menu() {
@@ -17,7 +18,8 @@
 
         switch (menu_reply) {
             case 1:
-                CheckInCustomer::CustomerSearch(customers, 0);
+                CheckInCustomer::CreateNewCustomer();
+
                 break;
             case 2:
                 //FlightStatus();
@@ -25,11 +27,16 @@
             case 3:
                 //CurrentFlights
                 break;
+            case 4:
+                return;
+                break;
         }
     }
     void Airline::CustIncrement() {
         custId++;
     }
+
+
     int Airline::GetCustId() {
         return custId;
     }
@@ -37,14 +44,28 @@
         customers[Airline::GetCustId()] = customer;
         Airline::CustIncrement();
     }
-int main() {
-    Airline::Menu();
 
-    CheckInCustomer::CreateNewCustomer();
-    for(auto x : Airline::customers) {
-        x.second->PrintCustomerInfo();
-    }
-    std::cout << Airline::GetCustId << std::endl;
+
+
+    int main() {
+    Customer *c = new Customer(1, "123-456-789", "8312 Spring Lake Road", "Billy", "Joel", 1);
+    Customer *c1 = new Customer(1, "123-456-789", "8312 Spring Lake Road", "agfgfdaadfg", "adsfadfg", 1);
+    Customer *c2 = new Customer();
+    Plane *p = new Plane("MSP", Plane::GetPlaneId(), "747", "Bob Dole", "Jimmy John");
+    Plane::AddPlane(p);
+    Plane *p1 = new Plane("MSP", Plane::GetPlaneId(), "737", "Dole Bob", "John Jimmy");
+    Plane::AddPlane(p1);
+    Plane *p2 = new Plane();
+
+    CheckInCustomer::ChooseFlight(c);
+    Plane::PrintFlightInfo(0);
+
+    //Plane::SeatAssignment(p,c1 ,1);
+    //p->PrintAvailableSeats();
+    //Plane::PrintFlightInfo();
+    //p->PrintFlightInfo(p->GetFlightId());
+    //c2->PrintCustomerInfo();
+
     return 0;
 }
 
