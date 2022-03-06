@@ -1,4 +1,5 @@
 #include "plane.h"
+
 Plane::Plane() {
     numSeats =  -1;
     planeModel = "";
@@ -7,13 +8,12 @@ Plane::Plane() {
     dest_ = "";
     flightId = -1;
 }
-Plane::Plane(std::string dest, int flight_id,std::string plane_model,
-             std::string pilot_name, std::string co_pilot) {
+Plane::Plane(std::string dest, int flight_id,std::string plane_model, std::string pilot_name, std::string co_pilot) {
     planeModel = plane_model;
     pilotName = pilot_name;
     coPilot = co_pilot;
     dest_ = dest;
-    flightId = flight_id;
+    flightId = planeId;
 
     if(plane_model == "747") {
         Customer* c = new Customer();
@@ -71,19 +71,22 @@ int Plane::RemainingSeats() {
 
 
 void Plane::SeatAssignment(int flightId, Customer* customer, int chosenSeat) {
-    Plane* &plane = planes[flightId];
+    //Plane* &plane = planes[flightId];
 
-    if (chosenSeat > plane->remainingSeats|| chosenSeat < 0) {
+    if (chosenSeat > planes[flightId]->remainingSeats|| chosenSeat < 0) {
         std::cout << "Please provide a valid seat number." << std::endl;
         return;
     }
-    else if (plane->IsSeatAvailable(flightId)) {
+    else if (planes[flightId]->IsSeatAvailable(chosenSeat) != true) {
         std::cout << "Seat " << chosenSeat << " is has already been taken." << std::endl;
+        std::cout << "Please Choose another seat: " << std::endl;
+        Plane::PrintAvailableSeats(flightId);
+        std::cin >> chosenSeat;
+        Plane::SeatAssignment(flightId,customer, chosenSeat);
     }
-
-    plane->passengers_[chosenSeat] = customer;
-    plane->remainingSeats--;
-
+    customer->SetFlightId(flightId);
+    planes[flightId]->passengers_[chosenSeat] = customer;
+    planes[flightId]->remainingSeats--;
 }
 
 void Plane::PrintAvailableSeats(int flightId) {
@@ -98,14 +101,14 @@ void Plane::PrintAvailableSeats(int flightId) {
     }
 
 }
-bool Plane::IsSeatAvailable(int chosenSeat) {
+bool Plane::IsSeatAvailable( int chosenSeat) {
     if(Plane::passengers_[chosenSeat]->GetId() == -1) {
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 void Plane::AddPlane(Plane* plane) {
-    planes[Plane::planeId] = plane;
+    planes[planeId] = plane;
     Plane::PlaneIncrement();
 }
 void Plane::PlaneIncrement() {
@@ -115,11 +118,12 @@ void Plane::ListAvailableFlights() {
     for(auto [id, plane] : planes) {
         if(plane->RemainingSeats() > 0) {
             std::cout << "Flight ID: " << plane->GetFlightId() <<
-            "  Destination : " << plane->GetDest() <<
-            "  Number of seats Available: " << plane->remainingSeats
-            << std::endl;
+                      "  Destination : " << plane->GetDest() <<
+                      "  Number of seats Available: " << plane->remainingSeats
+                      << std::endl;
         }
     }
+    std::cout << "---------------------------------------------------------------------------------------" << std::endl;
 }
 
 void Plane::PrintFlightInfo(int flightId) {
@@ -129,7 +133,17 @@ void Plane::PrintFlightInfo(int flightId) {
               "Remaining Seats: " << Plane::planes[flightId]->RemainingSeats() << std::endl <<
               "Pilot: " << Plane::planes[flightId]->GetPilotName() << " Co-pilot: " << Plane::planes[flightId]->GetCoPilotName() << std::endl <<
               "Plane model: " << Plane::planes[flightId]->GetPlaneModel() << std::endl;
-
-    std::cout << "--------------------------------------------------------------" << std::endl;
+    std::cout << "---------------------------------------------------------------------------------------" << std::endl;
 }
-
+void Plane::PrintFlightInfo() {
+    int flight_num = 0;
+    std::cout << "Please Enter the flight you would like to check." << std::endl;
+    std::cin >> flight_num;
+    std::cout << "Flight ID: " << flight_num << std::endl <<
+              "Destination: " << Plane::planes[flight_num]->GetDest() << std::endl <<
+              "Max number of seats: " << Plane::planes[flight_num]->GetNumSeats() << std::endl <<
+              "Remaining Seats: " << Plane::planes[flight_num]->RemainingSeats() << std::endl <<
+              "Pilot: " << Plane::planes[flight_num]->GetPilotName() << " Co-pilot: " << Plane::planes[flight_num]->GetCoPilotName() << std::endl <<
+              "Plane model: " << Plane::planes[flight_num]->GetPlaneModel() << std::endl;
+    std::cout << "---------------------------------------------------------------------------------------" << std::endl;
+}
